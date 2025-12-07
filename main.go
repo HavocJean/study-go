@@ -3,12 +3,15 @@ package main
 import (
 	"log"
 
+	"github.com/HavocJean/study-go/internal/logger"
 	"github.com/HavocJean/study-go/internal/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
 func main() {
+	logger.Info("Start use APP")
+
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -18,6 +21,6 @@ func main() {
 	routes.InitiRoutes(&router.RouterGroup)
 
 	if err := router.Run(":8082"); err != nil {
-		log.Fatal(err)
+		logger.Error("Fail to start use port", err)
 	}
 }
