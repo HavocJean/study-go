@@ -28,7 +28,7 @@ func CreateUser(c *gin.Context) {
 	)
 
 	if err := domain.CreateUser(); err != nil {
-		c.JSON(err.Code, err)
+		c.JSON(int(err.Code), err)
 		return
 	}
 
