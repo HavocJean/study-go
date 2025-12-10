@@ -16,19 +16,20 @@ Esta é a primeira rota do projeto em Go, usando Gin. Ela recebe os dados de um 
     }
     ```
 
-# Proccess
+### Proccess
 1. A requisição POST /users chega em:
-    `internal/routes/routes.go`
+- `internal/routes/routes.go`
 2. O controller é chamado:
-    `internal/controller/create_user.go`
+- `internal/controller/create_user.go`
 3. O JSON recebido é validado conforme regras definidas em:
-    `internal/controller/model/request/user_request.go`
+- `internal/controller/model/request/user_request.go`
 4. Os dados são convertidos em domínio (UserDomain):
-    `internal/model/user.go`
+- `internal/model/user.go`
 5. O service executa a regra de negócio:
-    `internal/model/service/user_interface.go`
+- `internal/model/service/user_interface.go`
 
 ## Structure
+```
 internal/
     ├─ routes/            → registra rotas
     ├─ controller/        → trata HTTP
@@ -39,7 +40,7 @@ internal/
     └─ model/service/     → regras de negócio
         ├─ create_user.go
         └─ user_interface.go
-
+```
 
 
 ## Commands
