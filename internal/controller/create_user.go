@@ -7,11 +7,11 @@ import (
 	"github.com/HavocJean/study-go/internal/controller/model/request"
 	"github.com/HavocJean/study-go/internal/logger"
 	"github.com/HavocJean/study-go/internal/model"
-	"github.com/HavocJean/study-go/internal/model/service"
+	"github.com/HavocJean/study-go/internal/view"
 	"github.com/gin-gonic/gin"
 )
 
-func CreateUser(c *gin.Context) {
+func (uc *userControllerInterface) CreateUser(c *gin.Context) {
 	var userRequest request.UserRequest
 
 	if err := c.ShouldBindJSON(&userRequest); err != nil {
@@ -28,13 +28,12 @@ func CreateUser(c *gin.Context) {
 		userRequest.Age,
 	)
 
-	service := service.NewUserDomainService()
-	if err := service.CreateUser(domain); err != nil {
+	if err := uc.service.CreateUser(domain); err != nil {
 		c.JSON(int(err.Code), err)
 		return
 	}
 
 	logger.Info("User created successfully")
 
-	c.String(http.StatusOK, "")
+	c.JSON(http.StatusOK, view.ConvertDomainToResponse(domain))
 }
