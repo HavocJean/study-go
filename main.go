@@ -1,23 +1,18 @@
 package main
 
 import (
-	"log"
-
+	"github.com/HavocJean/study-go/internal/config/database/mongodb"
 	"github.com/HavocJean/study-go/internal/controller"
 	"github.com/HavocJean/study-go/internal/logger"
 	"github.com/HavocJean/study-go/internal/model/service"
 	"github.com/HavocJean/study-go/internal/routes"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func main() {
 	logger.Info("Start use APP")
 
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	mongodb.InitiConnectMongodb()
 
 	service := service.NewUserDomainService()
 	userController := controller.NewUserControllerInterface(service)

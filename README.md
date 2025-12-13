@@ -31,13 +31,20 @@ Esta é a primeira rota do projeto em Go, usando Gin. Ela recebe os dados de um 
 ## Structure
 ```
 internal/
-    ├─ routes/            → registra rotas
-    ├─ controller/        → trata HTTP
+    ├─ config/
+    │   ├─ database/mongodb/
+    │   │   └─ mongodb_connection.go
+    │   ├─ rest_error/
+    │   │   └─ rest_error.go
+    │   └─ validation/
+    │       └─ validate_user.go
+    ├─ routes/
+    ├─ controller/
     │   ├─ create_user.go
-    │   └─ model/request/ → validação do body
-    ├─ model/             → domínio do usuário
+    │   └─ model/request/
+    ├─ model/
     │   └─ user.go
-    └─ model/service/     → regras de negócio
+    └─ model/service/
         ├─ create_user.go
         └─ user_interface.go
 ```
