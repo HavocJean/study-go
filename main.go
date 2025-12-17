@@ -1,10 +1,11 @@
 package main
 
 import (
+	"context"
+	"log"
+
 	"github.com/HavocJean/study-go/internal/config/database/mongodb"
-	"github.com/HavocJean/study-go/internal/controller"
 	"github.com/HavocJean/study-go/internal/logger"
-	"github.com/HavocJean/study-go/internal/model/service"
 	"github.com/HavocJean/study-go/internal/routes"
 	"github.com/gin-gonic/gin"
 )
@@ -12,10 +13,13 @@ import (
 func main() {
 	logger.Info("Start use APP")
 
-	mongodb.InitiConnectMongodb()
+	database, err := mongodb.NewMongoDBConnection(context.Background())
+	if err != nil {
+		log.Fatalf("Error trying to connect to database, error = %s \n", err.Error())
+		return
+	}
 
-	service := service.NewUserDomainService()
-	userController := controller.NewUserControllerInterface(service)
+	userController := initDependenies(database)
 
 	router := gin.Default()
 	routes.InitiRoutes(&router.RouterGroup, userController)
