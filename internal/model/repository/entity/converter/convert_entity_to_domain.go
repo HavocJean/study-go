@@ -13,6 +13,6 @@ func ConvertEntityToDomain(entity entity.UserEntity) model.UserDomainInterface {
 		entity.Age,
 	)
 
-	domain.SetID(entity.ID)
+	domain.SetID(entity.ID.Hex())
 	return domain
 }

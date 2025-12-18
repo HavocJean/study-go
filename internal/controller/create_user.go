@@ -9,12 +9,16 @@ import (
 	"github.com/HavocJean/study-go/internal/model"
 	"github.com/HavocJean/study-go/internal/view"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 func (uc *userControllerInterface) CreateUser(c *gin.Context) {
+	logger.Info("Init CreateUser controller", zap.String("journey", "createUser"))
+
 	var userRequest request.UserRequest
 
 	if err := c.ShouldBindJSON(&userRequest); err != nil {
+		logger.Error("Error trying to validate user info", err, zap.String("journey", "createUser"))
 		errRest := validation.ValidateUserError(err)
 
 		c.JSON(int(errRest.Code), errRest)
@@ -28,12 +32,15 @@ func (uc *userControllerInterface) CreateUser(c *gin.Context) {
 		userRequest.Age,
 	)
 
-	if err := uc.service.CreateUser(domain); err != nil {
+	domainResult, err := uc.service.CreateUserServices(domain)
+	if err != nil {
+		logger.Error("Error try to call CreateUser service", err, zap.String("journey", "createUser"))
+
 		c.JSON(int(err.Code), err)
 		return
 	}
 
-	logger.Info("User created successfully")
+	logger.Info("User created successfully", zap.String("userId", domainResult.GetID()))
 
-	c.JSON(http.StatusOK, view.ConvertDomainToResponse(domain))
+	c.JSON(http.StatusOK, view.ConvertDomainToResponse(domainResult))
 }
