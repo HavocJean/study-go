@@ -11,6 +11,7 @@ import (
 	"github.com/HavocJean/study-go/internal/model/repository/entity"
 	"github.com/HavocJean/study-go/internal/model/repository/entity/converter"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
 )
@@ -54,7 +55,8 @@ func (u *userRepository) FindUserByID(id string) (model.UserDomainInterface, *re
 
 	userEntity := &entity.UserEntity{}
 
-	filter := bson.D{{Key: "_id", Value: id}}
+	objectId, _ := primitive.ObjectIDFromHex(id)
+	filter := bson.D{{Key: "_id", Value: objectId}}
 	err := collection.FindOne(
 		context.Background(),
 		filter,

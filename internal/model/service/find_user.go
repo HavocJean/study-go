@@ -2,9 +2,19 @@ package service
 
 import (
 	"github.com/HavocJean/study-go/internal/config/rest_error"
+	"github.com/HavocJean/study-go/internal/logger"
 	"github.com/HavocJean/study-go/internal/model"
+	"go.uber.org/zap"
 )
 
-func (u *userDomainService) FindUser(string) (*model.UserDomainInterface, *rest_error.RestError) {
-	return nil, nil
+func (u *userDomainService) FindUserByEmailServices(email string) (model.UserDomainInterface, *rest_error.RestError) {
+	logger.Info("Init FindUserByEmailServices service", zap.String("journey", "FindUserByEmailServices"))
+
+	return u.userRepository.FindUserByEmail(email)
+}
+
+func (u *userDomainService) FindUserByIDServices(id string) (model.UserDomainInterface, *rest_error.RestError) {
+	logger.Info("Init FindUserByIdServices service", zap.String("journey", "FindUserByIdServices"))
+
+	return u.userRepository.FindUserByID(id)
 }
