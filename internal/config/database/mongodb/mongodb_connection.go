@@ -11,12 +11,12 @@ import (
 
 var (
 	MONGODB_URL = "MONGODB_URL"
-	MONGO_DB    = "MONGO_DB"
+	MONGODB_DB  = "MONGODB_DB"
 )
 
 func NewMongoDBConnection(ctx context.Context) (*mongo.Database, error) {
 	mongodb_uri := os.Getenv(MONGODB_URL)
-	mongo_database := os.Getenv(MONGO_DB)
+	mongo_database := os.Getenv(MONGODB_DB)
 
 	client, err := mongo.Connect(
 		ctx,
