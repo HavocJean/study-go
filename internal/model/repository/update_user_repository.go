@@ -21,9 +21,6 @@ func (ur *userRepository) UpdateUser(userId string, userDomain model.UserDomainI
 
 	value := converter.ConvertDomainToEntity(userDomain)
 	userIdHex, err := primitive.ObjectIDFromHex(userId)
-	if err != nil {
-		return rest_error.NewBadRequestError("UserId is not a valid")
-	}
 
 	filter := bson.D{{Key: "_id", Value: userIdHex}}
 	update := bson.D{{Key: "$set", Value: value}}
