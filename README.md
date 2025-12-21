@@ -16,7 +16,7 @@ Esta é a rota principal do projeto em Go, usando Gin. Ela recebe os dados de um
     }
     ```
 
-### Processo (Create User)
+### Proccess
 1. A requisição POST `/users` chega em:
    - `internal/routes/routes.go`
 2. O controller recebe e valida o JSON:

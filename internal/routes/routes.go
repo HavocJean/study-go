@@ -10,6 +10,6 @@ func InitiRoutes(r *gin.RouterGroup, userController controller.UserControllerInt
 	r.GET("/users/:userId", userController.FindUserByID)
 	r.GET("/users/email/:email", userController.FindUserByEmail)
 	r.POST("/users", userController.CreateUser)
-	r.PUT("/users", userController.UpdateUser)
-	r.DELETE("/delete", userController.DeleteUser)
+	r.PUT("/users/:userId", userController.UpdateUser)
+	r.DELETE("/delete/:userId", userController.DeleteUser)
 }
