@@ -10,6 +10,11 @@ import (
 func (u *userDomainService) CreateUserServices(userDomain model.UserDomainInterface) (model.UserDomainInterface, *rest_error.RestError) {
 	logger.Info("Init CreateUser service", zap.String("journey", "createUser"))
 
+	user, _ := u.FindUserByEmailServices(userDomain.GetEmail())
+	if user != nil {
+		return nil, rest_error.NewBadRequestError("Email is already registered")
+	}
+
 	userDomain.EncryptPassword()
 
 	userDomainRepository, err := u.userRepository.CreateUser(userDomain)
