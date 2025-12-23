@@ -18,3 +18,9 @@ func (u *userDomainService) FindUserByIDServices(id string) (model.UserDomainInt
 
 	return u.userRepository.FindUserByID(id)
 }
+
+func (u *userDomainService) findUserByEmailAndPasswordServices(email, password string) (model.UserDomainInterface, *rest_error.RestError) {
+	logger.Info("Init findUserByEmailAndPasswordServices service", zap.String("journey", "findUserByEmailAndPasswordServices"))
+
+	return u.userRepository.FindUserByEmailAndPassword(email, password)
+}
