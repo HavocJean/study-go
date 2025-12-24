@@ -1,5 +1,7 @@
 package model
 
+import "github.com/HavocJean/study-go/internal/config/rest_error"
+
 type UserDomainInterface interface {
 	GetEmail() string
 	GetPassword() string
@@ -10,6 +12,7 @@ type UserDomainInterface interface {
 	SetID(string)
 
 	EncryptPassword()
+	GenerateToken() (string, *rest_error.RestError)
 }
 
 func NewUserDomain(email, password, name string, age int8) UserDomainInterface {
