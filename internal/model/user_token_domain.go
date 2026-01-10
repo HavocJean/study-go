@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/HavocJean/study-go/internal/config/rest_error"
+	"github.com/HavocJean/study-go/internal/logger"
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 )
 
@@ -36,10 +38,11 @@ func (u *userDomain) GenerateToken() (string, *rest_error.RestError) {
 	return tokenString, nil
 }
 
-func VerifyToken(token string) (UserDomainInterface, *rest_error.RestError) {
+func VerifyTokenMiddleware(c *gin.Context) {
 	secret := os.Getenv(JWT_SECRET_KEY)
+	tokenValue := RemoveBearerPrefix(c.Request.Header.Get("Authorization"))
 
-	parsedToken, err := jwt.Parse(RemoveBearerPrefix(token), func(token *jwt.Token) (interface{}, error) {
+	parsedToken, err := jwt.Parse(tokenValue, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); ok {
 			return []byte(secret), nil
 		}
@@ -47,20 +50,29 @@ func VerifyToken(token string) (UserDomainInterface, *rest_error.RestError) {
 	})
 
 	if err != nil {
-		return nil, rest_error.NewUnathorizedRequestError("invalid token")
+		errRest := rest_error.NewUnathorizedRequestError("invalid token")
+		c.JSON(int(errRest.Code), errRest)
+		c.Abort()
+		return
 	}
 
 	claims, ok := parsedToken.Claims.(jwt.MapClaims)
 	if !ok || !parsedToken.Valid {
-		return nil, rest_error.NewUnathorizedRequestError("invalid token")
+		errRest := rest_error.NewUnathorizedRequestError("invalid token")
+		c.JSON(int(errRest.Code), errRest)
+		c.Abort()
+		return
 	}
 
-	return &userDomain{
+	userDomain := userDomain{
 		id:    claims["user_id"].(string),
 		email: claims["email"].(string),
 		name:  claims["name"].(string),
 		age:   int8(claims["age"].(float64)),
-	}, nil
+	}
+
+	logger.Info(fmt.Sprintf("User authenticated: %#v", userDomain))
+
 }
 
 func RemoveBearerPrefix(token string) string {
