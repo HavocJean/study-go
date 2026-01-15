@@ -35,8 +35,8 @@ func TestUserRepository_CreateUser(t *testing.T) {
 
 		_, errId := primitive.ObjectIDFromHex(userDomain.GetID())
 
-		assert.NotNil(t, err)
-		assert.NotNil(t, errId)
+		assert.Nil(t, err)
+		assert.Nil(t, errId)
 		assert.EqualValues(t, userDomain.GetEmail(), domain.GetEmail())
 		assert.EqualValues(t, userDomain.GetName(), domain.GetName())
 		assert.EqualValues(t, userDomain.GetAge(), domain.GetAge())
@@ -44,4 +44,17 @@ func TestUserRepository_CreateUser(t *testing.T) {
 
 	})
 
+	mtestDb.Run("return_error_from_database", func(mt *mtest.T) {
+		mt.AddMockResponses(bson.D{
+			{Key: "ok", Value: 0},
+		})
+		databaseMock := mt.Client.Database(database_name)
+
+		repo := NewUserRepository(databaseMock)
+		domain := model.NewUserDomain("teste@test.com", "test", "test", 90)
+		userDomain, err := repo.CreateUser(domain)
+
+		assert.NotNil(t, err)
+		assert.Nil(t, userDomain)
+	})
 }
